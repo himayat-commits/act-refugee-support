@@ -9,13 +9,21 @@ from datetime import datetime
 import logging
 
 # Use lightweight config if specified
-if os.getenv("USE_LIGHTWEIGHT", "false").lower() == "true":
+USE_LIGHTWEIGHT = os.getenv("USE_LIGHTWEIGHT", "false").lower() == "true"
+
+if USE_LIGHTWEIGHT:
     from config_light import QdrantConfig
 else:
     from config import QdrantConfig
 
 from search_engine_simple import SimpleSearchEngine
-from search_economic_integration import EconomicIntegrationSearch
+
+# Only import economic search if not in lightweight mode
+if not USE_LIGHTWEIGHT:
+    from search_economic_integration import EconomicIntegrationSearch
+else:
+    EconomicIntegrationSearch = None
+
 from models import SearchQuery, ResourceCategory
 
 # Set up logging
@@ -43,7 +51,12 @@ security = HTTPBearer(auto_error=False)
 # Initialize search engines
 config = QdrantConfig()
 search_engine = SimpleSearchEngine(config)
-economic_search = None  # Disable for now
+
+# Only initialize economic search if available
+if not USE_LIGHTWEIGHT and EconomicIntegrationSearch:
+    economic_search = EconomicIntegrationSearch(config)
+else:
+    economic_search = None
 
 class ChatQuery(BaseModel):
     message: str
@@ -224,6 +237,18 @@ async def search_economic_integration(
     authenticated: bool = Depends(verify_api_key)
 ):
     """Specialized endpoint for economic integration queries"""
+    
+    # If economic search is not available (lightweight mode), fall back to simple search
+    if not economic_search:
+        results = search_engine.search(query.message, query.limit)
+        resources_formatted = format_resources_for_voiceflow(results)
+        return VoiceflowResponse(
+            success=True,
+            message="Here are employment and career services that may help:",
+            resources=resources_formatted,
+            quick_replies=["Skills assessment", "Start a business", "Free training", "Find a mentor", "Job search help"],
+            metadata={"type": "economic_integration"}
+        )
     
     message_lower = query.message.lower()
     
