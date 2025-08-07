@@ -72,8 +72,9 @@ def verify_api_key(credentials: HTTPAuthorizationCredentials = Depends(security)
 def root():
     return {
         "service": "ACT Refugee Support API",
-        "status": "active",
-        "endpoints": ["/health", "/search", "/search/emergency", "/search/economic", "/docs"]
+        "status": "online",
+        "version": "2.1.0",
+        "timestamp": datetime.now().isoformat()
     }
 
 @app.get("/health")
@@ -84,6 +85,46 @@ def health_check():
         "timestamp": datetime.now().isoformat(),
         "database": "connected"
     }
+
+@app.post("/voiceflow", response_model=VoiceflowResponse)
+async def voiceflow_endpoint(
+    request: Dict,
+    authenticated: bool = Depends(verify_api_key)
+):
+    """Main Voiceflow integration endpoint"""
+    # Extract query from Voiceflow request format
+    query_text = request.get("query", request.get("message", ""))
+    user_id = request.get("user_id", "unknown")
+    
+    # Create ChatQuery object
+    query = ChatQuery(
+        message=query_text,
+        user_id=user_id,
+        limit=3
+    )
+    
+    # Use the existing search logic
+    return await search_resources(query)
+
+@app.post("/chat", response_model=VoiceflowResponse)
+async def chat_endpoint(
+    request: Dict,
+    authenticated: bool = Depends(verify_api_key)
+):
+    """Alternative chat endpoint"""
+    # Extract query from request
+    query_text = request.get("query", request.get("message", ""))
+    user_id = request.get("user_id", "unknown")
+    
+    # Create ChatQuery object
+    query = ChatQuery(
+        message=query_text,
+        user_id=user_id,
+        limit=3
+    )
+    
+    # Use the existing search logic
+    return await search_resources(query)
 
 @app.post("/search", response_model=VoiceflowResponse)
 async def search_resources(
