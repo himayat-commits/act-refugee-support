@@ -62,7 +62,8 @@ class OpenAIEmbedding:
                 return np.random.randn(1536).tolist()
             return [np.random.randn(1536).tolist() for _ in texts]
         
-        if isinstance(texts, str):
+        was_string = isinstance(texts, str)
+        if was_string:
             texts = [texts]
         
         try:
@@ -72,7 +73,8 @@ class OpenAIEmbedding:
             )
             embeddings = [item.embedding for item in response.data]
             
-            if len(embeddings) == 1 and isinstance(texts, str):
+            # Always return flat list for single string input
+            if was_string and len(embeddings) == 1:
                 return embeddings[0]
             return embeddings
         except Exception as e:

@@ -14,7 +14,7 @@ if os.getenv("USE_LIGHTWEIGHT", "false").lower() == "true":
 else:
     from config import QdrantConfig
 
-from search_engine import SearchEngine
+from search_engine_simple import SimpleSearchEngine
 from search_economic_integration import EconomicIntegrationSearch
 from models import SearchQuery, ResourceCategory
 
@@ -42,8 +42,8 @@ security = HTTPBearer(auto_error=False)
 
 # Initialize search engines
 config = QdrantConfig()
-search_engine = SearchEngine(config)
-economic_search = EconomicIntegrationSearch(config)
+search_engine = SimpleSearchEngine(config)
+economic_search = None  # Disable for now
 
 class ChatQuery(BaseModel):
     message: str
@@ -106,23 +106,8 @@ async def search_resources(
         elif intent == "exploitation":
             return await search_exploitation_help(query)
         
-        # Create search query
-        search_query = SearchQuery(
-            query=query.message,
-            limit=query.limit
-        )
-        
-        if query.category:
-            try:
-                search_query.categories = [ResourceCategory(query.category)]
-            except:
-                logger.warning(f"Invalid category: {query.category}")
-        
-        if query.urgency:
-            search_query.urgency = query.urgency
-            
-        # Perform search
-        results = search_engine.search(search_query)
+        # Perform simplified search
+        results = search_engine.search(query.message, query.limit)
         
         # If no results, try economic integration search
         if not results and any(word in query.message.lower() for word in ["job", "work", "skill", "qualification", "business"]):
@@ -167,14 +152,22 @@ async def search_emergency(authenticated: bool = Depends(verify_api_key)):
     
     resources_formatted = []
     for resource in urgent_services:
-        resources_formatted.append({
-            "name": f"🚨 {resource.name}",
-            "phone": resource.contact.phone,
-            "available": resource.contact.hours,
-            "description": resource.description[:150],
-            "urgency": resource.urgency_level,
-            "languages": ", ".join(resource.languages_available[:3])
-        })
+        if isinstance(resource, dict):
+            resources_formatted.append({
+                "name": f"🚨 {resource.get('name', 'Emergency Service')}",
+                "phone": resource.get('contact', 'Call 000'),
+                "available": resource.get('hours', '24/7'),
+                "description": resource.get('description', '')[:150],
+                "urgency": "critical",
+                "languages": resource.get('languages', 'Multiple languages')
+            })
+    
+    # Add hardcoded emergency numbers if no results
+    if not resources_formatted:
+        resources_formatted = [
+            {"name": "🚨 Emergency Services", "phone": "000", "available": "24/7", "description": "Police, Fire, Ambulance", "urgency": "critical", "languages": "All languages"},
+            {"name": "🚨 Lifeline Crisis Support", "phone": "13 11 14", "available": "24/7", "description": "Crisis support and suicide prevention", "urgency": "critical", "languages": "English"}
+        ]
     
     return VoiceflowResponse(
         success=True,
@@ -235,12 +228,7 @@ async def search_digital_support(
     authenticated: bool = Depends(verify_api_key)
 ):
     """Handle digital literacy and online service queries"""
-    search_query = SearchQuery(
-        query="MyGov digital help computer internet online email Centrelink",
-        limit=3
-    )
-    
-    results = search_engine.search(search_query)
+    results = search_engine.search("MyGov digital help computer internet online email Centrelink", 3)
     resources_formatted = format_resources_for_voiceflow(results)
     
     return VoiceflowResponse(
@@ -257,12 +245,7 @@ async def search_exploitation_help(
     authenticated: bool = Depends(verify_api_key)
 ):
     """Handle workplace exploitation and rights queries"""
-    search_query = SearchQuery(
-        query="exploitation wage theft workplace rights underpaid unsafe work",
-        limit=3
-    )
-    
-    results = search_engine.search(search_query)
+    results = search_engine.search("exploitation wage theft workplace rights underpaid unsafe work legal aid", 3)
     resources_formatted = format_resources_for_voiceflow(results)
     
     # Add critical notice
@@ -281,28 +264,41 @@ def format_resources_for_voiceflow(results) -> List[Dict]:
     """Format search results for Voiceflow display"""
     resources_formatted = []
     
-    for i, result in enumerate(results):
-        resource = result.resource if hasattr(result, 'resource') else result
-        
-        # Build formatted resource
-        formatted = {
-            "name": resource.name,
-            "description": resource.description[:200] + "..." if len(resource.description) > 200 else resource.description,
-            "phone": resource.contact.phone or "No phone",
-            "website": resource.contact.website or "No website",
-            "address": resource.contact.address or "Contact for address",
-            "hours": resource.contact.hours or "Contact for hours",
-            "services": ", ".join(resource.services_provided[:3]) if resource.services_provided else "Multiple services",
-            "cost": resource.cost,
-            "languages": ", ".join(resource.languages_available[:3]) if resource.languages_available else "English",
-            "urgency": resource.urgency_level
-        }
-        
-        # Add special markers
-        if resource.urgency_level == "critical":
-            formatted["name"] = "🚨 " + formatted["name"]
-        elif resource.cost.lower() == "free":
-            formatted["name"] = "✅ " + formatted["name"]
+    for result in results:
+        # Handle dict results from our simplified search
+        if isinstance(result, dict):
+            formatted = {
+                "name": result.get("name", "Unknown Service"),
+                "description": result.get("description", "")[:200] + "..." if len(result.get("description", "")) > 200 else result.get("description", ""),
+                "phone": result.get("contact", "No phone"),
+                "website": result.get("website", "No website"),
+                "location": result.get("location", "Contact for location"),
+                "hours": result.get("hours", "Contact for hours"),
+                "services": result.get("services", "Multiple services")[:100] + "..." if len(result.get("services", "")) > 100 else result.get("services", "Multiple services"),
+                "languages": result.get("languages", "English"),
+                "eligibility": result.get("eligibility", "Contact for details")
+            }
+            
+            # Add special markers
+            if result.get("emergency"):
+                formatted["name"] = "🚨 " + formatted["name"]
+            elif "free" in result.get("description", "").lower() or "no cost" in result.get("description", "").lower():
+                formatted["name"] = "✅ " + formatted["name"]
+                
+        else:
+            # Handle object results (fallback)
+            resource = result.resource if hasattr(result, 'resource') else result
+            formatted = {
+                "name": getattr(resource, 'name', 'Unknown Service'),
+                "description": getattr(resource, 'description', '')[:200],
+                "phone": "Contact for details",
+                "website": "Contact for details",
+                "location": "Canberra, ACT",
+                "hours": "Contact for hours",
+                "services": "Multiple services",
+                "languages": "English",
+                "eligibility": "Contact for details"
+            }
         
         resources_formatted.append(formatted)
     
