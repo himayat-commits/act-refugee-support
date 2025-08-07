@@ -2,8 +2,9 @@ import os
 from dotenv import load_dotenv
 from qdrant_client import QdrantClient
 from qdrant_client.models import Distance, VectorParams, PointStruct
-from sentence_transformers import SentenceTransformer
 import logging
+import openai
+from typing import List, Union
 
 load_dotenv()
 
@@ -16,16 +17,20 @@ class QdrantConfig:
         self.port = int(os.getenv("QDRANT_PORT", 6333))
         self.api_key = os.getenv("QDRANT_API_KEY", None)
         self.collection_name = "act_refugee_resources"
-        self.vector_size = 384
-        self.use_local_embeddings = os.getenv("USE_LOCAL_EMBEDDINGS", "true").lower() == "true"
-        self._embedding_model = None
+        self.vector_size = 1536  # OpenAI embedding dimension
+        self.use_local_embeddings = os.getenv("USE_LOCAL_EMBEDDINGS", "false").lower() == "true"
+        self.openai_api_key = os.getenv("OPENAI_API_KEY")
+        
+        if self.openai_api_key:
+            openai.api_key = self.openai_api_key
         
     def get_client(self):
         if self.api_key:
             return QdrantClient(
                 host=self.host,
                 port=self.port,
-                api_key=self.api_key
+                api_key=self.api_key,
+                https=True
             )
         else:
             return QdrantClient(
@@ -34,26 +39,49 @@ class QdrantConfig:
             )
     
     def get_embedding_model(self):
-        if self.use_local_embeddings:
-            if self._embedding_model is None:
-                try:
-                    logger.info("Loading embedding model...")
-                    self._embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
-                    logger.info("Embedding model loaded successfully")
-                except Exception as e:
-                    logger.error(f"Failed to load embedding model: {e}")
-                    logger.info("Using mock embeddings for development")
-                    # Return a mock object for development/testing
-                    import numpy as np
-                    class MockEmbedding:
-                        def encode(self, texts, convert_to_tensor=False):
-                            if isinstance(texts, str):
-                                return np.random.randn(384).tolist()
-                            return [np.random.randn(384).tolist() for _ in texts]
-                    self._embedding_model = MockEmbedding()
-            return self._embedding_model
+        """Returns a lightweight embedding model using OpenAI"""
+        return OpenAIEmbedding(self.openai_api_key)
+
+class OpenAIEmbedding:
+    """Lightweight OpenAI embedding wrapper"""
+    def __init__(self, api_key: str):
+        self.api_key = api_key
+        if api_key:
+            from openai import OpenAI
+            self.client = OpenAI(api_key=api_key)
         else:
-            raise NotImplementedError("OpenAI embeddings not implemented in this example")
+            logger.warning("No OpenAI API key provided, using mock embeddings")
+            self.client = None
+    
+    def encode(self, texts: Union[str, List[str]], convert_to_tensor=False):
+        """Encode texts using OpenAI embeddings"""
+        if self.client is None:
+            # Return mock embeddings for testing
+            import numpy as np
+            if isinstance(texts, str):
+                return np.random.randn(1536).tolist()
+            return [np.random.randn(1536).tolist() for _ in texts]
+        
+        if isinstance(texts, str):
+            texts = [texts]
+        
+        try:
+            response = self.client.embeddings.create(
+                model="text-embedding-ada-002",
+                input=texts
+            )
+            embeddings = [item.embedding for item in response.data]
+            
+            if len(embeddings) == 1 and isinstance(texts, str):
+                return embeddings[0]
+            return embeddings
+        except Exception as e:
+            logger.error(f"Error generating embeddings: {e}")
+            # Return random embeddings as fallback
+            import numpy as np
+            if len(texts) == 1:
+                return np.random.randn(1536).tolist()
+            return [np.random.randn(1536).tolist() for _ in texts]
 
 class CollectionManager:
     def __init__(self, config: QdrantConfig):

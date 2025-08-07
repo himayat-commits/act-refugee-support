@@ -8,7 +8,12 @@ import os
 from datetime import datetime
 import logging
 
-from config import QdrantConfig
+# Use lightweight config if specified
+if os.getenv("USE_LIGHTWEIGHT", "false").lower() == "true":
+    from config_light import QdrantConfig
+else:
+    from config import QdrantConfig
+
 from search_engine import SearchEngine
 from search_economic_integration import EconomicIntegrationSearch
 from models import SearchQuery, ResourceCategory
