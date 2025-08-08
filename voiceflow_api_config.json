@@ -1,0 +1,132 @@
+{
+  "api_configurations": {
+    "main_search": {
+      "name": "ACT Refugee Support Search",
+      "method": "POST",
+      "url": "https://act-refugee-support-production.up.railway.app/voiceflow",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "query": "{{user_input}}",
+        "user_id": "{{user.id}}",
+        "language": "{{user_language}}",
+        "category": "{{selected_category}}"
+      },
+      "response_mapping": {
+        "success": "response.success",
+        "message": "response.message",
+        "resources": "response.resources",
+        "quick_replies": "response.quick_replies",
+        "intent": "response.metadata.intent",
+        "results_count": "response.metadata.results_count"
+      }
+    },
+    "emergency_search": {
+      "name": "Emergency Services",
+      "method": "POST",
+      "url": "https://act-refugee-support-production.up.railway.app/search/emergency",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {},
+      "response_mapping": {
+        "success": "response.success",
+        "message": "response.message",
+        "resources": "response.resources"
+      }
+    },
+    "health_check": {
+      "name": "API Health Check",
+      "method": "GET",
+      "url": "https://act-refugee-support-production.up.railway.app/health",
+      "headers": {},
+      "response_mapping": {
+        "status": "response.status",
+        "database": "response.database"
+      }
+    }
+  },
+  "intents": {
+    "housing": {
+      "keywords": ["accommodation", "housing", "shelter", "homeless", "rent", "share house", "temporary housing"],
+      "category": "housing"
+    },
+    "healthcare": {
+      "keywords": ["doctor", "medical", "health", "hospital", "clinic", "mental health", "counseling", "therapy"],
+      "category": "healthcare"
+    },
+    "education": {
+      "keywords": ["school", "education", "training", "english class", "study", "university", "TAFE", "course"],
+      "category": "education"
+    },
+    "employment": {
+      "keywords": ["job", "work", "employment", "career", "skills", "qualification", "resume", "interview"],
+      "category": "employment"
+    },
+    "legal": {
+      "keywords": ["visa", "legal", "lawyer", "immigration", "rights", "protection", "citizenship"],
+      "category": "legal"
+    },
+    "emergency": {
+      "keywords": ["emergency", "urgent", "help now", "crisis", "danger", "police", "ambulance"],
+      "category": "emergency"
+    },
+    "financial": {
+      "keywords": ["money", "financial", "centrelink", "payment", "support payment", "benefit"],
+      "category": "financial"
+    }
+  },
+  "quick_reply_templates": {
+    "housing": [
+      "Emergency shelter",
+      "Rental assistance",
+      "Share accommodation",
+      "Bond help"
+    ],
+    "healthcare": [
+      "Find a doctor",
+      "Mental health support",
+      "Hospital locations",
+      "Interpreter services"
+    ],
+    "education": [
+      "English classes",
+      "School enrollment",
+      "Adult education",
+      "Recognition of qualifications"
+    ],
+    "employment": [
+      "Job search help",
+      "Resume writing",
+      "Skills recognition",
+      "Work rights info"
+    ],
+    "general": [
+      "Tell me more",
+      "Different service",
+      "Emergency help",
+      "Speak to someone"
+    ]
+  },
+  "error_messages": {
+    "api_error": "I'm having trouble connecting to services right now. For immediate help:\n• Emergency: Call 000\n• Translation: Call 131 450\n• Crisis support: Call 13 11 14",
+    "no_results": "I couldn't find specific services matching your request. Try:\n• Being more specific about what you need\n• Using different keywords\n• Asking for general support services",
+    "connection_error": "Connection issue detected. Please try again or call 131 450 for telephone interpreter service."
+  },
+  "welcome_messages": {
+    "english": "Welcome to ACT Refugee Support Services. I can help you find:\n• Housing and accommodation\n• Healthcare services\n• Education and training\n• Employment support\n• Legal assistance\n• Emergency services\n\nHow can I help you today?",
+    "multilingual": "Welcome! I speak multiple languages.\n\nالعربية | فارسی | 中文 | Español | English\n\nPlease choose your language or tell me how I can help."
+  },
+  "resource_display_template": "📍 **{{name}}**\n{{description}}\n\n📞 Phone: {{phone}}\n🌐 Website: {{website}}\n📍 Location: {{location}}\n🕐 Hours: {{hours}}\n🗣️ Languages: {{languages}}",
+  "test_queries": [
+    "I need emergency help",
+    "Where can I find accommodation?",
+    "I need to see a doctor",
+    "How do I enroll my children in school?",
+    "I'm looking for work",
+    "I need legal advice about my visa",
+    "Where can I learn English?",
+    "I need financial assistance"
+  ]
+}
