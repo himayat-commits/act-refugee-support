@@ -47,8 +47,14 @@ class OpenAIEmbedding:
     def __init__(self, api_key: str):
         self.api_key = api_key
         if api_key:
-            from openai import OpenAI
-            self.client = OpenAI(api_key=api_key)
+            try:
+                from openai import OpenAI
+                # Simple initialization without extra parameters
+                os.environ["OPENAI_API_KEY"] = api_key
+                self.client = OpenAI()
+            except Exception as e:
+                logger.error(f"Failed to initialize OpenAI client: {e}")
+                self.client = None
         else:
             logger.warning("No OpenAI API key provided, using mock embeddings")
             self.client = None
