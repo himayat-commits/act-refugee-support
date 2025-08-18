@@ -1,12 +1,12 @@
 import logging
 
-from src.data.resources import get_act_refugee_resources
-from src.core.config import QdrantConfig
-from src.data.critical import get_critical_gap_resources
-from src.database.ingestion import DataIngestion
-from src.data.economic import get_economic_integration_resources
-from src.core.models import ResourceCategory, SearchQuery
-from src.search.engine import SearchEngine
+from act_resources_data import get_act_refugee_resources
+from config import QdrantConfig
+from critical_gap_resources import get_critical_gap_resources
+from data_ingestion import DataIngestion
+from economic_integration_resources import get_economic_integration_resources
+from models import ResourceCategory, SearchQuery
+from search_engine import SearchEngine
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)

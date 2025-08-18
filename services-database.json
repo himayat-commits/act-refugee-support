@@ -1,0 +1,353 @@
+{
+  "services": [
+    {
+      "id": "act-001",
+      "name": "Companion House",
+      "category": ["mental-health", "trauma-support", "counselling"],
+      "description": "Specialist torture and trauma counselling service for refugees and asylum seekers",
+      "urgency_levels": ["standard", "priority", "crisis"],
+      "contact": {
+        "phone": "02 6251 4550",
+        "email": "info@companionhouse.org.au",
+        "website": "https://www.companionhouse.org.au",
+        "address": "41 Templeton Street, Cook ACT 2614"
+      },
+      "hours": {
+        "monday-friday": "9:00 AM - 5:00 PM",
+        "saturday-sunday": "Closed"
+      },
+      "languages": ["English", "Arabic", "Dari", "Farsi", "Tamil", "Interpreter service available"],
+      "eligibility": {
+        "visa_types": ["all humanitarian visas", "asylum seekers"],
+        "age": "All ages",
+        "requirements": "Refugees and people seeking asylum who have experienced torture or trauma"
+      },
+      "services_provided": [
+        "Individual counselling",
+        "Group therapy",
+        "Family support",
+        "Youth programs",
+        "Community development"
+      ],
+      "referral_process": "Phone or online referral form",
+      "wait_time": "2-4 weeks for non-urgent",
+      "cost": "Free"
+    },
+    {
+      "id": "act-002",
+      "name": "Migrant and Refugee Settlement Services (MARSS)",
+      "category": ["settlement", "employment", "housing", "general-support"],
+      "description": "Comprehensive settlement support for newly arrived migrants and refugees",
+      "urgency_levels": ["standard", "priority"],
+      "contact": {
+        "phone": "02 6248 8577",
+        "email": "marss@marss.org.au",
+        "website": "https://www.marss.org.au",
+        "address": "1/43 Canberra Avenue, Fyshwick ACT 2609"
+      },
+      "hours": {
+        "monday-friday": "9:00 AM - 5:00 PM",
+        "saturday-sunday": "Closed"
+      },
+      "languages": ["English", "Arabic", "Mandarin", "Cantonese", "Vietnamese", "Interpreter service available"],
+      "eligibility": {
+        "visa_types": ["permanent residents", "humanitarian visas", "family visas"],
+        "age": "All ages",
+        "requirements": "Migrants and refugees who have been in Australia for less than 5 years"
+      },
+      "services_provided": [
+        "Housing assistance",
+        "Employment support",
+        "English classes referral",
+        "Document assistance",
+        "School enrollment help",
+        "Driver license support"
+      ],
+      "referral_process": "Walk-in, phone, or email",
+      "wait_time": "Same week appointment usually available",
+      "cost": "Free"
+    },
+    {
+      "id": "act-003",
+      "name": "Legal Aid ACT - Migration Services",
+      "category": ["legal", "immigration", "advocacy"],
+      "description": "Free legal advice and representation for migration and refugee matters",
+      "urgency_levels": ["standard", "priority", "urgent"],
+      "contact": {
+        "phone": "1300 654 314",
+        "email": "legalaid@legalaidact.org.au",
+        "website": "https://www.legalaidact.org.au",
+        "address": "2 Allsop Street, Canberra ACT 2601"
+      },
+      "hours": {
+        "monday-friday": "8:30 AM - 5:00 PM",
+        "saturday-sunday": "Closed"
+      },
+      "languages": ["English", "Interpreter service available"],
+      "eligibility": {
+        "visa_types": ["all visa types"],
+        "age": "All ages",
+        "requirements": "Must meet income and asset tests for free services"
+      },
+      "services_provided": [
+        "Visa application assistance",
+        "Protection visa support",
+        "Appeals and review assistance",
+        "Family reunion advice",
+        "Citizenship applications"
+      ],
+      "referral_process": "Phone for appointment",
+      "wait_time": "1-2 weeks for non-urgent matters",
+      "cost": "Free for eligible clients"
+    },
+    {
+      "id": "act-004",
+      "name": "Canberra Health Services - Refugee Health Nurse",
+      "category": ["healthcare", "medical", "screening"],
+      "description": "Specialized health services for refugees and asylum seekers",
+      "urgency_levels": ["standard", "priority", "emergency"],
+      "contact": {
+        "phone": "02 5124 9977",
+        "website": "https://www.canberrahealthservices.act.gov.au",
+        "address": "Building 5, Level 1, Canberra Hospital"
+      },
+      "hours": {
+        "monday-friday": "8:30 AM - 5:00 PM",
+        "saturday-sunday": "Emergency only"
+      },
+      "languages": ["English", "Professional interpreters available"],
+      "eligibility": {
+        "visa_types": ["humanitarian visas", "asylum seekers"],
+        "age": "All ages",
+        "requirements": "Newly arrived refugees and asylum seekers"
+      },
+      "services_provided": [
+        "Health screening",
+        "Immunizations",
+        "Chronic disease management",
+        "Mental health referrals",
+        "Health education",
+        "GP referrals"
+      ],
+      "referral_process": "GP referral or self-referral",
+      "wait_time": "1-2 weeks",
+      "cost": "Free or bulk-billed"
+    },
+    {
+      "id": "act-005",
+      "name": "CIT Solutions - Adult Migrant English Program (AMEP)",
+      "category": ["education", "english-learning", "training"],
+      "description": "Free English language classes for eligible migrants and refugees",
+      "urgency_levels": ["standard"],
+      "contact": {
+        "phone": "02 6207 3628",
+        "email": "cit.amep@cit.edu.au",
+        "website": "https://citsolutions.cit.edu.au/amep",
+        "address": "37 Constitution Avenue, Reid ACT 2601"
+      },
+      "hours": {
+        "monday-friday": "9:00 AM - 5:00 PM",
+        "saturday": "Classes available",
+        "sunday": "Closed"
+      },
+      "languages": ["English", "Multiple languages for initial assessment"],
+      "eligibility": {
+        "visa_types": ["permanent residents", "humanitarian visas", "certain temporary visas"],
+        "age": "18 years and above",
+        "requirements": "Limited English proficiency, within first 5 years of arrival"
+      },
+      "services_provided": [
+        "English language classes",
+        "Settlement language pathways",
+        "Employment-focused English",
+        "Digital literacy",
+        "Childcare during classes"
+      ],
+      "referral_process": "Online registration or phone",
+      "wait_time": "Next available intake (monthly)",
+      "cost": "Free for eligible clients"
+    },
+    {
+      "id": "act-006",
+      "name": "Red Cross ACT - Emergency Relief & Migration Support",
+      "category": ["emergency-relief", "financial-assistance", "crisis-support"],
+      "description": "Emergency assistance and support for people in crisis",
+      "urgency_levels": ["standard", "priority", "crisis"],
+      "contact": {
+        "phone": "02 6234 7600",
+        "website": "https://www.redcross.org.au/act",
+        "address": "3 Dann Close, Garran ACT 2605"
+      },
+      "hours": {
+        "monday-friday": "9:00 AM - 5:00 PM",
+        "saturday-sunday": "Closed"
+      },
+      "languages": ["English", "Interpreter service available"],
+      "eligibility": {
+        "visa_types": ["all visa types"],
+        "age": "All ages",
+        "requirements": "People experiencing financial hardship or crisis"
+      },
+      "services_provided": [
+        "Food vouchers",
+        "Emergency accommodation referrals",
+        "Financial counselling",
+        "Migration support program",
+        "Tracing services",
+        "Emergency preparedness"
+      ],
+      "referral_process": "Phone or walk-in",
+      "wait_time": "Same day for emergencies",
+      "cost": "Free"
+    },
+    {
+      "id": "act-007",
+      "name": "Canberra Refugee Support",
+      "category": ["community-support", "advocacy", "social-connection"],
+      "description": "Volunteer-based organization supporting refugees and asylum seekers",
+      "urgency_levels": ["standard"],
+      "contact": {
+        "phone": "0488 026 140",
+        "email": "info@actrefugeesupport.org.au",
+        "website": "https://www.actrefugeesupport.org.au"
+      },
+      "hours": {
+        "flexible": "Volunteer-based, contact for availability"
+      },
+      "languages": ["English", "Various volunteer languages"],
+      "eligibility": {
+        "visa_types": ["asylum seekers", "humanitarian visas"],
+        "age": "All ages",
+        "requirements": "Refugees and people seeking asylum"
+      },
+      "services_provided": [
+        "Social activities",
+        "Practical support",
+        "Donation coordination",
+        "Advocacy",
+        "Community connections",
+        "Mentoring"
+      ],
+      "referral_process": "Email or phone",
+      "wait_time": "Varies",
+      "cost": "Free"
+    },
+    {
+      "id": "act-008",
+      "name": "Multicultural Hub Canberra",
+      "category": ["community-center", "social-programs", "cultural-activities"],
+      "description": "Community center promoting multicultural engagement and support",
+      "urgency_levels": ["standard"],
+      "contact": {
+        "phone": "02 6162 4988",
+        "email": "admin@multhub.com.au",
+        "website": "https://www.multhub.com.au",
+        "address": "49 Scotts Crossing, Canberra ACT 2601"
+      },
+      "hours": {
+        "monday-friday": "9:00 AM - 5:00 PM",
+        "saturday": "Program dependent",
+        "sunday": "Program dependent"
+      },
+      "languages": ["English", "Multiple community languages"],
+      "eligibility": {
+        "visa_types": ["all visa types"],
+        "age": "All ages",
+        "requirements": "Open to all multicultural communities"
+      },
+      "services_provided": [
+        "Community programs",
+        "Cultural celebrations",
+        "Women's groups",
+        "Youth programs",
+        "Information sessions",
+        "Social connections"
+      ],
+      "referral_process": "Drop-in or register for programs",
+      "wait_time": "Immediate for drop-in activities",
+      "cost": "Most programs free"
+    },
+    {
+      "id": "act-009",
+      "name": "Centrelink - Multicultural Services",
+      "category": ["government-services", "financial-support", "benefits"],
+      "description": "Government income support and services with multilingual support",
+      "urgency_levels": ["standard", "priority"],
+      "contact": {
+        "phone": "131 202",
+        "website": "https://www.servicesaustralia.gov.au",
+        "address": "Multiple locations in ACT"
+      },
+      "hours": {
+        "monday-friday": "8:00 AM - 5:00 PM",
+        "saturday-sunday": "Closed"
+      },
+      "languages": ["English", "Translating and Interpreting Service available"],
+      "eligibility": {
+        "visa_types": ["permanent residents", "certain temporary visas", "humanitarian visas"],
+        "age": "Varies by payment type",
+        "requirements": "Varies by payment type and visa status"
+      },
+      "services_provided": [
+        "Income support payments",
+        "Family payments",
+        "Job seeker support",
+        "Medicare enrollment",
+        "Tax file number application",
+        "Crisis payment"
+      ],
+      "referral_process": "Phone, online, or visit service center",
+      "wait_time": "Varies by service",
+      "cost": "Free"
+    },
+    {
+      "id": "act-010",
+      "name": "YWCA Canberra - Housing Support",
+      "category": ["housing", "accommodation", "women-services"],
+      "description": "Supportive housing and services for women and families",
+      "urgency_levels": ["standard", "priority", "crisis"],
+      "contact": {
+        "phone": "02 6185 2000",
+        "email": "canberra@ywca-canberra.org.au",
+        "website": "https://ywca-canberra.org.au",
+        "address": "Level 2, 71 Northbourne Avenue, Canberra ACT 2601"
+      },
+      "hours": {
+        "monday-friday": "9:00 AM - 5:00 PM",
+        "saturday-sunday": "Crisis support available"
+      },
+      "languages": ["English", "Interpreter service available"],
+      "eligibility": {
+        "visa_types": ["all visa types"],
+        "age": "Women and families",
+        "requirements": "Women and families experiencing housing stress or homelessness"
+      },
+      "services_provided": [
+        "Emergency accommodation",
+        "Transitional housing",
+        "Housing support programs",
+        "Family support",
+        "Domestic violence support",
+        "Youth housing"
+      ],
+      "referral_process": "Phone for assessment",
+      "wait_time": "Immediate for crisis, varies for other services",
+      "cost": "Subsidized based on income"
+    }
+  ],
+  "emergency_services": {
+    "police_fire_ambulance": "000",
+    "crisis_support_lifeline": "13 11 14",
+    "domestic_violence_crisis": "02 6280 0900",
+    "mental_health_crisis": "1800 629 354",
+    "translating_interpreting": "131 450"
+  },
+  "service_categories": {
+    "settlement": ["housing", "employment", "education", "general-support"],
+    "health": ["healthcare", "mental-health", "trauma-support"],
+    "legal": ["immigration", "advocacy", "legal"],
+    "education": ["english-learning", "training", "schools"],
+    "emergency": ["crisis-support", "emergency-relief", "financial-assistance"],
+    "community": ["social-connection", "cultural-activities", "community-support"]
+  }
+}
