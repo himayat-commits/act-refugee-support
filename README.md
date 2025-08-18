@@ -7,10 +7,18 @@ A comprehensive Qdrant vector database system designed to power AI chatbots supp
 - **Comprehensive Resource Coverage**: 50+ essential services covering legal aid, healthcare, housing, education, employment, mental health, and economic integration
 - **Economic Integration Focus**: Specialized resources for skill recognition, career pathways, microenterprise support, and professional development
 - **Skill Underutilization Solutions**: Targeted support for overseas-qualified professionals to work in their field
-- **Intelligent Semantic Search**: Uses sentence transformers for understanding context and intent
+- **Intelligent Semantic Search**: Uses OpenAI embeddings for superior context and intent understanding
 - **Multi-language Support**: Resources available in multiple languages with interpreter services
 - **Urgency-based Prioritization**: Critical services highlighted for emergency situations
 - **Category-based Filtering**: Organized into 14 main service categories
+
+## Technical Stack
+
+- **Embeddings**: OpenAI text-embedding-3-small (1536 dimensions)
+- **Vector Database**: Qdrant for semantic search
+- **API Framework**: FastAPI with async support
+- **Search**: Multiple specialized search engines
+- **Integration**: Optimized for Voiceflow chatbots
 
 ## Installation
 
@@ -24,9 +32,20 @@ docker run -p 6333:6333 qdrant/qdrant
 pip install -r requirements.txt
 ```
 
-3. Configure environment (copy `.env.example` to `.env`):
+3. Configure environment:
 ```bash
 cp .env.example .env
+```
+
+4. Set required environment variables in `.env`:
+```env
+# Required
+OPENAI_API_KEY=your-openai-api-key-here
+
+# Qdrant Configuration
+QDRANT_HOST=localhost  # or your Qdrant Cloud URL
+QDRANT_PORT=6333
+QDRANT_API_KEY=  # Required for Qdrant Cloud
 ```
 
 ## Usage
@@ -36,11 +55,18 @@ cp .env.example .env
 python main.py
 ```
 
+### Run the API Server
+```bash
+python run_api.py
+# API will be available at http://localhost:8000
+# API docs at http://localhost:8000/docs
+```
+
 ### Integrate with Your Chatbot
 ```python
-from config import QdrantConfig
-from search_engine import SearchEngine
-from models import SearchQuery
+from src.core.config import QdrantConfig
+from src.search.engine import SearchEngine
+from src.core.models import SearchQuery
 
 # Initialize
 config = QdrantConfig()
@@ -173,22 +199,57 @@ Each resource contains:
 - Urgency level
 - Keywords for improved search
 
+## Project Structure
+
+```
+act-refugee-support/
+├── src/                  # Source code
+│   ├── api/             # FastAPI endpoints
+│   ├── core/            # Configuration and models
+│   ├── search/          # Search engines
+│   ├── data/            # Resource data
+│   └── database/        # Qdrant operations
+├── deployment/          # Deployment configs
+├── docs/                # Documentation
+├── tests/               # Test suites
+└── run_api.py          # Main entry point
+```
+
+## Requirements
+
+- Python 3.8+
+- OpenAI API key (required for embeddings)
+- Qdrant (local or cloud)
+- 8GB RAM recommended
+
 ## Contributing
 
 To add new resources:
-1. Edit `act_resources_data.py`
+1. Edit `src/data/resources.py`
 2. Follow the Resource model structure
 3. Include accurate contact information
 4. Specify appropriate urgency levels
 5. Add relevant keywords
 
-## Deployment
+## Deployment Options
 
-For production deployment:
-1. Use managed Qdrant Cloud or self-host with proper backup
-2. Implement API authentication
-3. Set up monitoring and logging
-4. Consider caching for frequently accessed resources
+### Railway (Recommended)
+```bash
+# Deploy with one click using railway.json
+# Set OPENAI_API_KEY in Railway dashboard
+```
+
+### Docker
+```bash
+docker build -f deployment/docker/Dockerfile -t refugee-api .
+docker run -p 8000:8000 --env-file .env refugee-api
+```
+
+### Production Considerations
+1. **Required**: Set OPENAI_API_KEY environment variable
+2. Use managed Qdrant Cloud for reliability
+3. Enable API authentication (ENABLE_AUTH=true)
+4. Implement caching for frequent queries
 5. Regular updates of contact information
 
 ## Privacy & Security
